@@ -1,9 +1,6 @@
 package com.heuk.base.config;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
+import com.heuk.base.utils.SerializerUtil;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
@@ -15,7 +12,6 @@ import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.listener.ReactiveRedisMessageListenerContainer;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.integration.redis.util.RedisLockRegistry;
@@ -48,7 +44,7 @@ public class RedisConfig {
         template.setConnectionFactory(factory);
 
         StringRedisSerializer stringSerializer = new StringRedisSerializer();
-        RedisSerializer<?> jacksonSerializer = getJacksonSerializer();
+        RedisSerializer<?> jacksonSerializer = SerializerUtil.getJacksonSerializer();
 
         template.setKeySerializer(stringSerializer);
         template.setValueSerializer(jacksonSerializer);
@@ -58,14 +54,6 @@ public class RedisConfig {
         template.afterPropertiesSet();
 
         return template;
-    }
-
-    private RedisSerializer<?> getJacksonSerializer() {
-        ObjectMapper om = new ObjectMapper();
-        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        om.activateDefaultTyping(LaissezFaireSubTypeValidator.instance,
-                ObjectMapper.DefaultTyping.NON_FINAL);
-        return new GenericJackson2JsonRedisSerializer(om);
     }
 
     @Bean
