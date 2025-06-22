@@ -1,2 +1,4 @@
 base-cache/.idea/
 **/.idea/
+**/src/test/java/**
+**/target/**
