@@ -1,0 +1,15 @@
+server:
+  port:
+    8002
+spring:
+  application:
+    name: base-task
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/scheduler
+    username: postgres
+    password:
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: embedded
